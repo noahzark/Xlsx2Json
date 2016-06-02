@@ -70,7 +70,7 @@ public class ExcelParser {
         //Parse each cell
         for ( int index = 0; index < parsedSheet.width;  index++)
         {
-            Cell cellValue = row.getCell(index);
+            Cell cell = row.getCell(index);
 
             String key = parsedSheet.getKey( index );
             ParsedCellType type = parsedSheet.getType( index );
@@ -80,7 +80,7 @@ public class ExcelParser {
                 case BASIC:
                 case OBJECT:
                 case REFERENCE:
-                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK) {
+                    if (cell == null || cell.getCellType() == Cell.CELL_TYPE_BLANK) {
                         jsonRow.put( key, JSONObject.NULL);
                         continue;
                     }
@@ -88,7 +88,7 @@ public class ExcelParser {
                 case ARRAY_STRING:
                 case ARRAY_BOOLEAN:
                 case ARRAY_DOUBLE:
-                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK) {
+                    if (cell == null || cell.getCellType() == Cell.CELL_TYPE_BLANK) {
                         jsonRow.put( key, new ArrayList() );
                         continue;
                     }
@@ -104,40 +104,40 @@ public class ExcelParser {
 
             switch (type) {
                 case BASIC:
-                    switch (cellValue.getCellType())
+                    switch (cell.getCellType())
                     {
                         case Cell.CELL_TYPE_NUMERIC:
-                            jsonRow.put( key, cellValue.getNumericCellValue() );
+                            jsonRow.put( key, cell.getNumericCellValue() );
                             break;
                         case Cell.CELL_TYPE_BOOLEAN:
-                            jsonRow.put( key, cellValue.getBooleanCellValue() );
+                            jsonRow.put( key, cell.getBooleanCellValue() );
                             break;
                         default:
-                            jsonRow.put( key, cellValue.getStringCellValue() );
+                            jsonRow.put( key, cell.getStringCellValue() );
                             break;
                     };
                     break;
 
                 case ARRAY_STRING:
-                    result = ExcelParser.<ArrayList<String>>parseCellData(type, cellValue);
+                    result = ExcelParser.<ArrayList<String>>parseCellData(type, cell.getStringCellValue());
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
 
                 case ARRAY_BOOLEAN:
-                    result = ExcelParser.<ArrayList<Boolean>>parseCellData(type, cellValue);
+                    result = ExcelParser.<ArrayList<Boolean>>parseCellData(type, cell.getStringCellValue());
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
 
                 case ARRAY_DOUBLE:
-                    result = ExcelParser.<ArrayList<Double>>parseCellData(type, cellValue);
+                    result = ExcelParser.<ArrayList<Double>>parseCellData(type, cell.getStringCellValue());
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
 
                 case OBJECT:
-                    jsonObject = ExcelParser.<JSONObject>parseCellData(type, cellValue);
+                    jsonObject = ExcelParser.<JSONObject>parseCellData(type, cell.getStringCellValue());
                     break;
 
                 case REFERENCE:
@@ -155,15 +155,14 @@ public class ExcelParser {
     /**
      * Parse a cell of the row
      * @param type The data type
-     * @param cell The cell to be parsed
+     * @param cellValue The cell string to be parsed
      * @param <W> The return data type
      * @return Parsed data
      * @throws NumberFormatException Numeric data parse failed
      */
-    public static <W> W parseCellData(ParsedCellType type, Cell cell) throws NumberFormatException {
+    public static <W> W parseCellData(ParsedCellType type, String cellValue) throws NumberFormatException {
         Object object = null;
 
-        String cellValue = cell.getStringCellValue();
         String[] items;
 
         switch (type) {
