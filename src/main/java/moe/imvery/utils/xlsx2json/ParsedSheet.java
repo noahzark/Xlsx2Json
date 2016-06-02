@@ -3,6 +3,7 @@ package moe.imvery.utils.xlsx2json;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,7 +13,8 @@ import java.util.Iterator;
  */
 public class ParsedSheet {
 
-    public Sheet sheet;
+    private Workbook workbook;
+    private Sheet sheet;
 
     private ArrayList<ParsedCellType> types;
     private ArrayList<String> keys;
@@ -22,8 +24,9 @@ public class ParsedSheet {
 
     private boolean parsed;
 
-    public ParsedSheet(Sheet sheet) {
-        this.sheet = sheet;
+    public ParsedSheet(Workbook workbook, String sheetName) {
+        this.workbook = workbook;
+        this.sheet = workbook.getSheet(sheetName);
 
         typeRowIndex = 0;
         nameRowIndex = 1;
@@ -83,6 +86,18 @@ public class ParsedSheet {
         return this;
     }
 
+    public Workbook getWorkbook() {
+        return workbook;
+    }
+
+    public Sheet getSheet() {
+        return sheet;
+    }
+
+    public Sheet getSheet(String sheetName) {
+        return workbook.getSheet(sheetName);
+    }
+
     public boolean isParsed() {
         return parsed;
     }
@@ -99,6 +114,13 @@ public class ParsedSheet {
             throw new NullPointerException("This sheet haven't been parsed, please call parseSheet() method first!");
 
         return keys.get(index);
+    }
+
+    public int indexOfKey(String key) {
+        if (!isParsed())
+            throw new NullPointerException("This sheet haven't been parsed, please call parseSheet() method first!");
+
+        return keys.indexOf(key);
     }
 
 }
