@@ -80,11 +80,13 @@ public class ExcelParser {
 
             switch (type) {
                 case BASIC:
+                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK) {
+                        jsonRow.put( key, JSONObject.NULL);
+                        break;
+                    }
+
                     switch (cellValue.getCellType())
                     {
-                        case Cell.CELL_TYPE_BLANK:
-                            jsonRow.put( key, JSONObject.NULL);
-                            break;
                         case Cell.CELL_TYPE_NUMERIC:
                             jsonRow.put( key, cellValue.getNumericCellValue() );
                             break;
@@ -98,19 +100,28 @@ public class ExcelParser {
                     break;
 
                 case ARRAY_STRING:
-                    result = ExcelParser.<ArrayList<String>>parseCellData(type, cellValue);
+                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK)
+                        result = new ArrayList<String>();
+                    else
+                        result = ExcelParser.<ArrayList<String>>parseCellData(type, cellValue);
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
 
                 case ARRAY_BOOLEAN:
-                    result = ExcelParser.<ArrayList<Boolean>>parseCellData(type, cellValue);
+                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK)
+                        result = new ArrayList<Boolean>();
+                    else
+                        result = ExcelParser.<ArrayList<Boolean>>parseCellData(type, cellValue);
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
 
                 case ARRAY_DOUBLE:
-                    result = ExcelParser.<ArrayList<Double>>parseCellData(type, cellValue);
+                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK)
+                        result = new ArrayList<Double>();
+                    else
+                        result = ExcelParser.<ArrayList<Double>>parseCellData(type, cellValue);
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
