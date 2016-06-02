@@ -71,4 +71,30 @@ public class ConfigParserTest {
         }
     }
 
+    @Test
+    public void parseSheetWithObjectAndReference() throws Exception {
+        String fileName = "test";
+        File excelFile = new File(fileName + ".xlsx");
+
+        try(FileInputStream inp = new FileInputStream( excelFile )) {
+            Workbook workbook = WorkbookFactory.create(inp);
+            // Start constructing JSON.
+            JSONObject json = new JSONObject();
+
+            // Create JSON
+            String configName = "map";
+            JSONArray rows = ExcelParser.parseSheet(workbook, configName);
+            json.put(configName, rows);
+
+            String jsonText = json.toString();
+
+            // Get the JSON text.
+            Path path = Paths.get(fileName + "3.expected.json");
+            BufferedReader reader = Files.newBufferedReader(path);
+            String expected = reader.readLine();
+
+            JSONAssert.assertEquals(expected, jsonText, false);
+        }
+    }
+
 }
