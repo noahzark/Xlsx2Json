@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 /**
  * Created by Feliciano on 6/1/2016.
  */
-public class ConfigToolMain {
+public class ExcelParserMain {
 
     public static void main(String[] args) {
         String fileName = "test";
