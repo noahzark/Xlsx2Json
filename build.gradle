@@ -1,0 +1,27 @@
+group 'moe.imvery.utils'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // http://mvnrepository.com/artifact/org.apache.poi/poi
+    compile group: 'org.apache.poi', name: 'poi', version: '3.9'
+
+    // http://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.14'
+
+    // http://mvnrepository.com/artifact/org.json/json
+    compile group: 'org.json', name: 'json', version: '20160212'
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    // http://mvnrepository.com/artifact/org.skyscreamer/jsonassert
+    testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.2.3'
+
+}
