@@ -8,11 +8,30 @@ import java.util.List;
  * @author Feliciano.Long
  */
 public enum ParsedCellType {
+    /**
+     * Basic type includes: String, Integer, Double and Boolean. See isBasicType() for detail
+     */
     BASIC("Basic"),
+    /**
+     * String array
+     */
     ARRAY_STRING("Array<String>"),
+    /**
+     * Boolean array
+     */
     ARRAY_BOOLEAN("Array<Boolean>"),
+    /**
+     * Double array
+     */
     ARRAY_DOUBLE("Array<Double>"),
-    REFERENCE("Reference");
+    /**
+     * Reference to another JSONObject from another row
+     */
+    REFERENCE("Reference"),
+    /**
+     * JSONObject
+     */
+    OBJECT("Object");
 
     private String stringValue;
 
@@ -47,6 +66,11 @@ public enum ParsedCellType {
 
     private static List<String> basicTypes = Arrays.asList(new String[]{"String", "Integer", "Float", "Double", "Boolean"});
 
+    /**
+     * Judge the type name if it's a supported basic type
+     * @param typeName Type name
+     * @return True if it's supported
+     */
     public static boolean isBasicType(String typeName) {
         for (String basicType : basicTypes) {
             if (typeName.equalsIgnoreCase(basicType))
