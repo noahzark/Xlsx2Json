@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Feliciano.Long on 6/1/2016.
  * @author Feliciano.Long
  */
-public enum ConfigType {
+public enum ParsedCellType {
     BASIC("Basic"),
     ARRAY_STRING("Array<String>"),
     ARRAY_BOOLEAN("Array<Boolean>"),
@@ -16,7 +16,7 @@ public enum ConfigType {
 
     private String stringValue;
 
-    ConfigType(String stringValue) {
+    ParsedCellType(String stringValue) {
         this.stringValue = stringValue;
     }
 
@@ -31,9 +31,9 @@ public enum ConfigType {
      * @return the enumeration value of the string
      * @throws IllegalArgumentException if there is no match
      */
-    public static ConfigType fromString(String stringValue) {
+    public static ParsedCellType fromString(String stringValue) {
         if (stringValue!=null) {
-            for (ConfigType type : ConfigType.values()) {
+            for (ParsedCellType type : ParsedCellType.values()) {
                 if (stringValue.equalsIgnoreCase(type.toString())) {
                     return type;
                 }

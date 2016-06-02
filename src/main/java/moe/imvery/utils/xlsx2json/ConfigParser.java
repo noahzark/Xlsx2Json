@@ -21,7 +21,7 @@ public class ConfigParser {
      * @param configName
      * @return
      */
-    public static JSONArray parseSheet(Workbook workbook, String configName) {
+    public static JSONArray parseSheet( Workbook workbook, String configName ) {
         // Iterate through the rows.
         JSONArray rows = new JSONArray();
 
@@ -31,7 +31,7 @@ public class ConfigParser {
         int typeRowIndex = 0, nameRowIndex = 1;
 
         // Fetch the type row.
-        ArrayList<ConfigType> types = new ArrayList<>();
+        ArrayList<ParsedCellType> types = new ArrayList<>();
         if ( !sheet.getRow(typeRowIndex).getCell(0).getStringCellValue().equalsIgnoreCase("basic") ) {
             // If the primary key doesn't have a type defined "Basic", then we'll think all the columns are basic type,
             // and the first row is name row.
@@ -42,7 +42,7 @@ public class ConfigParser {
             for (Iterator<Cell> cellsIT = typeRow.cellIterator(); cellsIT.hasNext(); )
             {
                 Cell cell = cellsIT.next();
-                types.add(ConfigType.BASIC);
+                types.add(ParsedCellType.BASIC);
             }
         } else {
             // Else read the type of each column
@@ -51,7 +51,7 @@ public class ConfigParser {
             {
                 Cell cell = cellsIT.next();
                 String cellType = cell.getStringCellValue();
-                types.add(ConfigType.fromString(cellType));
+                types.add(ParsedCellType.fromString(cellType));
             }
         }
 
@@ -81,6 +81,15 @@ public class ConfigParser {
         return rows;
     }
 
+    /* TODO WIP
+    public static Row findRowByColumn( Sheet sheet ) {
+        for (Iterator<Row> rowsIT = sheet.rowIterator(); rowsIT.hasNext(); )
+        {
+            Row row = rowsIT.next();
+        }
+    }
+    */
+
     /**
      * Parse a row of the sheet
      * @param row The target row to parse
@@ -88,7 +97,7 @@ public class ConfigParser {
      * @param types The data types
      * @return A parsed JSONObject
      */
-    public static JSONObject parseRow(Row row, ArrayList<String> keys, ArrayList<ConfigType> types) {
+    public static JSONObject parseRow(Row row, ArrayList<String> keys, ArrayList<ParsedCellType> types) {
         JSONObject jsonRow = new JSONObject();
 
         //Parse each cell
@@ -97,7 +106,7 @@ public class ConfigParser {
             Cell cellValue = cellsIT.next();
             int index = cellValue.getColumnIndex();
             String key = keys.get( index );
-            ConfigType type = types.get( index );
+            ParsedCellType type = types.get( index );
 
             ArrayList result;
             JSONArray jsonArray;
@@ -156,7 +165,7 @@ public class ConfigParser {
      * @return Parsed data
      * @throws NumberFormatException Numeric data parse failed
      */
-    public static <W> W parseCellData(ConfigType type, Cell cell) throws NumberFormatException {
+    public static <W> W parseCellData(ParsedCellType type, Cell cell) throws NumberFormatException {
         Object object = null;
 
         String cellValue = cell.getStringCellValue();
