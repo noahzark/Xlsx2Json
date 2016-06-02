@@ -1,2 +1,2 @@
 # Xlsx2Json
-A java parser to convert xlsx sheets to JSON
+A Java parser to convert xlsx sheets to JSON
