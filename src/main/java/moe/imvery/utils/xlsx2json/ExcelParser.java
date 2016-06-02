@@ -75,16 +75,35 @@ public class ExcelParser {
             String key = parsedSheet.getKey( index );
             ParsedCellType type = parsedSheet.getType( index );
 
+            // Null cell handler
+            switch (type) {
+                case BASIC:
+                case OBJECT:
+                case REFERENCE:
+                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK) {
+                        jsonRow.put( key, JSONObject.NULL);
+                        continue;
+                    }
+                    break;
+                case ARRAY_STRING:
+                case ARRAY_BOOLEAN:
+                case ARRAY_DOUBLE:
+                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK) {
+                        jsonRow.put( key, new ArrayList() );
+                        continue;
+                    }
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Unhandled empty cell of " + type + " type.");
+            }
+
             ArrayList result;
             JSONArray jsonArray;
+            JSONObject jsonObject;
 
             switch (type) {
                 case BASIC:
-                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK) {
-                        jsonRow.put( key, JSONObject.NULL);
-                        break;
-                    }
-
                     switch (cellValue.getCellType())
                     {
                         case Cell.CELL_TYPE_NUMERIC:
@@ -100,30 +119,25 @@ public class ExcelParser {
                     break;
 
                 case ARRAY_STRING:
-                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK)
-                        result = new ArrayList<String>();
-                    else
-                        result = ExcelParser.<ArrayList<String>>parseCellData(type, cellValue);
+                    result = ExcelParser.<ArrayList<String>>parseCellData(type, cellValue);
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
 
                 case ARRAY_BOOLEAN:
-                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK)
-                        result = new ArrayList<Boolean>();
-                    else
-                        result = ExcelParser.<ArrayList<Boolean>>parseCellData(type, cellValue);
+                    result = ExcelParser.<ArrayList<Boolean>>parseCellData(type, cellValue);
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
 
                 case ARRAY_DOUBLE:
-                    if (cellValue == null || cellValue.getCellType() == Cell.CELL_TYPE_BLANK)
-                        result = new ArrayList<Double>();
-                    else
-                        result = ExcelParser.<ArrayList<Double>>parseCellData(type, cellValue);
+                    result = ExcelParser.<ArrayList<Double>>parseCellData(type, cellValue);
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
+                    break;
+
+                case OBJECT:
+                    jsonObject = ExcelParser.<JSONObject>parseCellData(type, cellValue);
                     break;
 
                 case REFERENCE:
@@ -131,7 +145,7 @@ public class ExcelParser {
                     break;
 
                 default:
-                    throw new IllegalArgumentException("Unsupported type " + type + " found");
+                    throw new IllegalArgumentException("Unsupported type " + type + " found.");
             }
 
         }
