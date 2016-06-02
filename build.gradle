@@ -1,5 +1,5 @@
 group 'moe.imvery.utils'
-version '1.0-SNAPSHOT'
+version '1.1'
 
 apply plugin: 'java'
 
@@ -24,4 +24,15 @@ dependencies {
     // http://mvnrepository.com/artifact/org.skyscreamer/jsonassert
     testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.2.3'
 
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Xlsx2Json',
+                'Implementation-Version': version,
+                'Main-Class': 'moe.imvery.utils.xlsx2json.ExcelParserMain'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
