@@ -18,6 +18,7 @@ public class ParsedSheet {
     private ArrayList<String> keys;
 
     public int typeRowIndex, nameRowIndex;
+    public int width;
 
     private boolean parsed;
 
@@ -26,6 +27,8 @@ public class ParsedSheet {
 
         typeRowIndex = 0;
         nameRowIndex = 1;
+
+        width = 0;
 
         parsed = false;
 
@@ -68,6 +71,8 @@ public class ParsedSheet {
             {
                 Cell cell = cellsIT.next();
                 keys.add(cell.getStringCellValue());
+
+                width++;
             }
         } catch (Exception e) {
             e.printStackTrace();
