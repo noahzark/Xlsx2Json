@@ -50,10 +50,11 @@ public class ExcelParser {
 
     /* TODO WIP
     public static Row findRowByColumn( Sheet sheet ) {
-        for (Iterator<Row> rowsIT = sheet.rowIterator(); rowsIT.hasNext(); )
-        {
+        for (Iterator<Row> rowsIT = sheet.rowIterator(); rowsIT.hasNext(); ) {
             Row row = rowsIT.next();
         }
+
+        return null;
     }
     */
 
@@ -67,11 +68,10 @@ public class ExcelParser {
         JSONObject jsonRow = new JSONObject();
 
         //Parse each cell
-        for ( Iterator<Cell> cellsIT = row.cellIterator(); cellsIT.hasNext(); )
+        for ( int index = 0; index < parsedSheet.width;  index++)
         {
-            Cell cellValue = cellsIT.next();
+            Cell cellValue = row.getCell(index);
 
-            int index = cellValue.getColumnIndex();
             String key = parsedSheet.getKey( index );
             ParsedCellType type = parsedSheet.getType( index );
 
@@ -82,6 +82,9 @@ public class ExcelParser {
                 case BASIC:
                     switch (cellValue.getCellType())
                     {
+                        case Cell.CELL_TYPE_BLANK:
+                            jsonRow.put( key, JSONObject.NULL);
+                            break;
                         case Cell.CELL_TYPE_NUMERIC:
                             jsonRow.put( key, cellValue.getNumericCellValue() );
                             break;
