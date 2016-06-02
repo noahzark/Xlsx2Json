@@ -28,52 +28,19 @@ public class ExcelParser {
         // Get the Sheet by name.
         Sheet sheet = workbook.getSheet(configName);
 
-        int typeRowIndex = 0, nameRowIndex = 1;
-
-        // Fetch the type row.
-        ArrayList<ParsedCellType> types = new ArrayList<>();
-        if ( !sheet.getRow(typeRowIndex).getCell(0).getStringCellValue().equalsIgnoreCase("basic") ) {
-            // If the primary key doesn't have a type defined "Basic", then we'll think all the columns are basic type,
-            // and the first row is name row.
-            typeRowIndex = 0;
-            nameRowIndex = 0;
-
-            Row typeRow = sheet.getRow(typeRowIndex);
-            for (Iterator<Cell> cellsIT = typeRow.cellIterator(); cellsIT.hasNext(); )
-            {
-                Cell cell = cellsIT.next();
-                types.add(ParsedCellType.BASIC);
-            }
-        } else {
-            // Else read the type of each column
-            Row typeRow = sheet.getRow(typeRowIndex);
-            for (Iterator<Cell> cellsIT = typeRow.cellIterator(); cellsIT.hasNext(); )
-            {
-                Cell cell = cellsIT.next();
-                String cellType = cell.getStringCellValue();
-                types.add(ParsedCellType.fromString(cellType));
-            }
-        }
-
-        // Fetch the name row.
-        ArrayList<String> keys = new ArrayList<>();
-        Row nameRow = sheet.getRow(nameRowIndex);
-        for (Iterator<Cell> cellsIT = nameRow.cellIterator(); cellsIT.hasNext(); )
-        {
-            Cell cell = cellsIT.next();
-            keys.add(cell.getStringCellValue());
-        }
+        ParsedSheet parsedSheet = new ParsedSheet(sheet);
+        parsedSheet.parseSheet();
 
         // Parse each row.
         for (Iterator<Row> rowsIT = sheet.rowIterator(); rowsIT.hasNext(); )
         {
             Row row = rowsIT.next();
 
-            if ( row.getRowNum() <= nameRowIndex )
+            if ( row.getRowNum() <= parsedSheet.nameRowIndex )
                 continue;
 
             // Iterate through the cells.
-            JSONObject jsonRow = parseRow(row, keys, types);
+            JSONObject jsonRow = parseRow(row, parsedSheet);
 
             rows.put( jsonRow );
         }
@@ -93,20 +60,20 @@ public class ExcelParser {
     /**
      * Parse a row of the sheet
      * @param row The target row to parse
-     * @param keys The names
-     * @param types The data types
+     * @param parsedSheet Parsed sheet to provide name and type information
      * @return A parsed JSONObject
      */
-    public static JSONObject parseRow(Row row, ArrayList<String> keys, ArrayList<ParsedCellType> types) {
+    public static JSONObject parseRow(Row row, ParsedSheet parsedSheet) {
         JSONObject jsonRow = new JSONObject();
 
         //Parse each cell
         for ( Iterator<Cell> cellsIT = row.cellIterator(); cellsIT.hasNext(); )
         {
             Cell cellValue = cellsIT.next();
+
             int index = cellValue.getColumnIndex();
-            String key = keys.get( index );
-            ParsedCellType type = types.get( index );
+            String key = parsedSheet.getKey( index );
+            ParsedCellType type = parsedSheet.getType( index );
 
             ArrayList result;
             JSONArray jsonArray;
