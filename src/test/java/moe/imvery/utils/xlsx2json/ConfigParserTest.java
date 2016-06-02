@@ -31,7 +31,7 @@ public class ConfigParserTest {
 
             // Create JSON
             String configName = "weaponStuffs";
-            JSONArray rows = ConfigParser.parseSheet(workbook, configName);
+            JSONArray rows = ExcelParser.parseSheet(workbook, configName);
             json.put(configName, rows);
 
             String jsonText = json.toString();
@@ -57,7 +57,7 @@ public class ConfigParserTest {
 
             // Create JSON
             String configName = "skillStuffs";
-            JSONArray rows = ConfigParser.parseSheet(workbook, configName);
+            JSONArray rows = ExcelParser.parseSheet(workbook, configName);
             json.put(configName, rows);
 
             String jsonText = json.toString();

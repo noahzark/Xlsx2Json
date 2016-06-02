@@ -29,7 +29,7 @@ public class ConfigToolMain {
 
             // Create JSON
             String configName = "shieldStuffs";
-            JSONArray rows = ConfigParser.parseSheet(workbook, configName);
+            JSONArray rows = ExcelParser.parseSheet(workbook, configName);
             json.put( configName, rows );
 
             // Get the JSON text.

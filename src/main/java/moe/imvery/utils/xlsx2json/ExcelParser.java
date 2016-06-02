@@ -13,7 +13,7 @@ import java.util.Iterator;
 /**
  * Created by Feliciano on 6/1/2016.
  */
-public class ConfigParser {
+public class ExcelParser {
 
     /**
      * Parse the whole sheet of a workbook
@@ -128,19 +128,19 @@ public class ConfigParser {
                     break;
 
                 case ARRAY_STRING:
-                    result = ConfigParser.<ArrayList<String>>parseCellData(type, cellValue);
+                    result = ExcelParser.<ArrayList<String>>parseCellData(type, cellValue);
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
 
                 case ARRAY_BOOLEAN:
-                    result = ConfigParser.<ArrayList<Boolean>>parseCellData(type, cellValue);
+                    result = ExcelParser.<ArrayList<Boolean>>parseCellData(type, cellValue);
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
 
                 case ARRAY_DOUBLE:
-                    result = ConfigParser.<ArrayList<Double>>parseCellData(type, cellValue);
+                    result = ExcelParser.<ArrayList<Double>>parseCellData(type, cellValue);
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
