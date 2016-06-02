@@ -1,0 +1,19 @@
+stages:
+    - compile
+    - test
+
+cache:
+    key: "$CI_BUILD_REF"
+    paths:
+        - build/
+        - .gradle/
+
+compile_job:
+    stage: compile
+    script:
+        - "./gradlew clean compileJava compileTestJava"
+
+test_job:
+    stage: test
+    script:
+        - "./gradlew test"
