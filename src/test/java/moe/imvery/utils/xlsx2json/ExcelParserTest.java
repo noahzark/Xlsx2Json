@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 /**
  * Created by Feliciano on 6/2/2016.
  */
-public class ConfigParserTest {
+public class ExcelParserTest {
 
     @Test
     public void parseSheetWithAllBasicTypes() throws Exception {
