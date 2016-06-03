@@ -26,7 +26,10 @@ public class ParsedSheet {
 
     public ParsedSheet(Workbook workbook, String sheetName) {
         this.workbook = workbook;
-        this.sheet = workbook.getSheet(sheetName);
+        sheet = workbook.getSheet(sheetName);
+
+        if (sheet == null)
+            throw new IllegalArgumentException("Unable to find the sheet name " + sheetName + " in the workbook.");
 
         typeRowIndex = 0;
         nameRowIndex = 1;
@@ -96,7 +99,10 @@ public class ParsedSheet {
     }
 
     public Sheet getSheet(String sheetName) {
-        return workbook.getSheet(sheetName);
+        Sheet sheet = workbook.getSheet(sheetName);
+        if (sheet == null)
+            throw new IllegalArgumentException("Unable to find the sheet name " + sheetName + " in the workbook.");
+        return sheet;
     }
 
     public boolean isParsed() {
