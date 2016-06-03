@@ -16,6 +16,8 @@ Example
 
 > xlsx2json test.xlsx "monsters maps weapons"
 
+#### Arguments
+
 * The first argument is the Excel filename
 * The second argument it the sheet you want to export to json
 * The third argument indicates whether show the sheet names in generated json or not, will be set to false if omitted
