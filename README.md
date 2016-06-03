@@ -84,11 +84,9 @@ Result:
             "oh god"
          ],
          "shiled@shieldStuffs#_id":null,
-         "id":456,
+         "id":null,
          "nums":[
-            3,
-            5,
-            8
+
          ]
       }
    ]
