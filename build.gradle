@@ -1,5 +1,5 @@
 group 'moe.imvery.utils'
-version '1.2'
+version '1.3'
 
 apply plugin: 'java'
 
@@ -22,7 +22,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
     // http://mvnrepository.com/artifact/org.skyscreamer/jsonassert
-    testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.2.3'
+    compile group: 'org.skyscreamer', name: 'jsonassert', version: '1.2.3'
 
 }
 
