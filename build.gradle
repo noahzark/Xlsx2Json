@@ -1,5 +1,5 @@
 group 'moe.imvery.utils'
-version '1.1'
+version '1.2'
 
 apply plugin: 'java'
 
@@ -32,7 +32,7 @@ task fatJar(type: Jar) {
                 'Implementation-Version': version,
                 'Main-Class': 'moe.imvery.utils.xlsx2json.ExcelParserMain'
     }
-    baseName = project.name + '-all'
+    baseName = project.name
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }

@@ -10,11 +10,11 @@ Supported platforms: Anywhere you can run a Java program
 
 ## Usage
 
-> xlsx2json target_name "sheet_name_1 sheet_name_2 ..." [true|false]
+> java -jar xlsx2json-x.x.jar target_name "sheet_name_1 sheet_name_2 ..." [true|false]
 
 Example
 
-> xlsx2json test.xlsx "monsters maps weapons"
+> java -jar xlsx2json-1.2.jar test.xlsx "monsters maps weapons"
 
 #### Arguments
 
