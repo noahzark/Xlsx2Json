@@ -45,7 +45,8 @@ public class ParsedSheet {
 
         try {
             // Fetch the type row.
-            if ( !sheet.getRow(typeRowIndex).getCell(0).getStringCellValue().equalsIgnoreCase("basic") ) {
+            String firstColumnValue = sheet.getRow(typeRowIndex).getCell(0).getStringCellValue();
+            if ( !ParsedCellType.isBasicType(firstColumnValue)) {
                 // If the primary key doesn't have a type defined "Basic", then we'll think all the columns are basic type,
                 // and the first row is name row.
                 typeRowIndex = 0;

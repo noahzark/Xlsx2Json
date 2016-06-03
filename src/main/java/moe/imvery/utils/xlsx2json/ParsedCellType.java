@@ -64,7 +64,7 @@ public enum ParsedCellType {
         throw new IllegalArgumentException("No constant with name " + stringValue + " found");
     }
 
-    private static List<String> basicTypes = Arrays.asList(new String[]{"String", "Integer", "Float", "Double", "Boolean"});
+    private static List<String> basicTypes = Arrays.asList(new String[]{"String", "Integer", "Float", "Double", "Boolean", "Basic"});
 
     /**
      * Judge the type name if it's a supported basic type
