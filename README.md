@@ -83,13 +83,11 @@ Result:
          "words":[
             "oh god"
          ],
-         "shiled@shieldStuffs#_id":null,
-         "id":456,
+         "id":null,
          "nums":[
-            3,
-            5,
-            8
-         ]
+
+         ],
+         "shiled":null
       }
    ]
 }
@@ -131,4 +129,8 @@ Use this type to insert a JSON object from another sheet, the format should be
 ``` name_of_this_column@sheet_name#column_name ```
 
 and the value should be the column value of target.
+
+#### Null values
+
+If a column is blank, will automatically generate a null value in the JSON file.
 

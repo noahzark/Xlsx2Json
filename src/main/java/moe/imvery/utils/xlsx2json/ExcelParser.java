@@ -114,12 +114,18 @@ public class ExcelParser {
             switch (type) {
                 case BASIC:
                 case OBJECT:
-                case REFERENCE:
                     if (cell == null || cell.getCellType() == CELL_TYPE_BLANK) {
                         jsonRow.put( key, JSONObject.NULL);
                         continue;
                     }
                     break;
+                case REFERENCE:
+                    if (cell == null || cell.getCellType() == CELL_TYPE_BLANK) {
+                        jsonRow.put( key.substring(0, key.indexOf("@")), JSONObject.NULL);
+                        continue;
+                    }
+                    break;
+
                 case ARRAY_STRING:
                 case ARRAY_BOOLEAN:
                 case ARRAY_DOUBLE:
