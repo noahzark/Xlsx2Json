@@ -21,7 +21,7 @@ public class ExcelParserTest {
 
     @Test
     public void parseSheetWithAllBasicTypes() throws Exception {
-        String fileName = "test";
+        String fileName = "testcases/test";
         File excelFile = new File(fileName + ".xlsx");
 
         try(FileInputStream inp = new FileInputStream( excelFile )) {
@@ -47,7 +47,7 @@ public class ExcelParserTest {
 
     @Test
     public void parseSheetWithArrays() throws Exception {
-        String fileName = "test";
+        String fileName = "testcases/test";
         File excelFile = new File(fileName + ".xlsx");
 
         try(FileInputStream inp = new FileInputStream( excelFile )) {
@@ -73,7 +73,7 @@ public class ExcelParserTest {
 
     @Test
     public void parseSheetWithObjectAndReference() throws Exception {
-        String fileName = "test";
+        String fileName = "testcases/test";
         File excelFile = new File(fileName + ".xlsx");
 
         try(FileInputStream inp = new FileInputStream( excelFile )) {
