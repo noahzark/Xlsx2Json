@@ -52,7 +52,13 @@ public class ExcelParser {
         return rows;
     }
 
-    // TODO WIP
+    /**
+     * Find a row using the key and value in another sheet
+     * @param sheet The target sheet
+     * @param key One column's name of the row
+     * @param value The column's value
+     * @return Found row, or null if not found
+     */
     public static Row findRowByColumn( ParsedSheet sheet, String key, String value) {
         int index = sheet.indexOfKey(key);
 
@@ -68,8 +74,6 @@ public class ExcelParser {
                 case BASIC:
                     if (cell == null)
                         continue;
-
-                    ;
 
                     if (cell.getCellType() == CELL_TYPE_BLANK)
                         continue;
