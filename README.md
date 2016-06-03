@@ -12,9 +12,13 @@ Supported platforms: Anywhere you can run a Java program
 
 > xlsx2json target_name "sheet_name_1 sheet_name_2 ..." [true|false]
 
+Example
+
+> xlsx2json test.xlsx "monsters maps weapons"
+
 * The first argument is the Excel filename
 * The second argument it the sheet you want to export to json
-* The third argument indicates whether show the sheet names in generated json or not
+* The third argument indicates whether show the sheet names in generated json or not, will be set to false if omitted
 
 (e.g. ture = {"sheet1":{...},"sheet2":{...} | false = [{...},{...}])
 
