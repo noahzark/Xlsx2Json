@@ -14,7 +14,7 @@ Supported platforms: Anywhere you can run a Java program
 
 Example
 
-> java -jar xlsx2json-1.2.jar test.xlsx "monsters maps weapons"
+> java -jar xlsx2json-1.2.jar test.xlsx "monsters maps weapons" true
 
 #### Arguments
 
@@ -22,7 +22,9 @@ Example
 * The second argument it the sheet you want to export to json
 * The third argument indicates whether show the sheet names in generated json or not, will be set to false if omitted
 
-(e.g. ture = {"sheet1":{...},"sheet2":{...} | false = [{...},{...}])
+e.g.
+> ture = {"sheet1":{...},"sheet2":{...}
+> false = [{...},{...}]
 
 ## Gradle build command
 > $ gradle clean
@@ -32,14 +34,14 @@ Example
 The Jar is created under the ```$project/build/libs/``` folder.
 
 ## Example (Excel .xlsx file)
-#### Monster sheet
+#### Monsters sheet
 | Integer | String | Basic  | Array\<Double\> | Array\<String\>   | Reference   | Object      |
 | ----   | --------| ------ | ---------------- | ---------- | ---------- | ------------ |
 | id     | weapon  | $flag   | nums  | words  | shiled@shield#$id   | objects      |
 | 123    | shield  | TRUE   | 1,2   | hello,world   | 123 | a:123,b:"45",c:false   |
 |        | sword   | FALSE  | null  | oh god       |   | a:11;b:"22",c:true    |
 
-#### Shield sheet
+#### Shields sheet
 | Integer | String | Boolean  | Basic |
 | ----   | --------| ------ | ------ | 
 | $id     | name  | forSale   | price  |
@@ -49,7 +51,7 @@ Result:
 
 ```json
 {
-   "example":[
+   "monsters":[
       {
          "weapon":"shiled",
          "objects":{
@@ -111,7 +113,7 @@ You can use "Basic" to let the parser automatically detect types
 
 The values should be divided using commas ","
 
-> You can use the Array<Double> to represent all numeric types like Integer/Float and so on
+> You can use the Array\<Double\> to represent all numeric types like Integer/Float and so on
 
 #### Object type
 * Object
