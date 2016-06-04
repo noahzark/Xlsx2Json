@@ -18,52 +18,97 @@ import java.nio.file.Paths;
 public class ExcelParserMain {
 
     /**
+     * Read a workbook from the Excel file
+     * @param targetName File name
+     * @return The workbook
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
+    public static Workbook getWorkbook(String targetName) throws IOException, InvalidFormatException {
+        File excelFile = new File(targetName + ".xlsx");
+        FileInputStream inp = new FileInputStream( excelFile );
+        Workbook workbook = WorkbookFactory.create( inp );
+        return workbook;
+    }
+
+    /**
+     * Construct a json object using the sheet list from the workbook
+     * @param workbook
+     * @param sheetList Sheet names in the workbook
+     * @return Constructed json object
+     */
+    public static JSONObject constructJsonObject(Workbook workbook, String[] sheetList) {
+        // Start constructing JSON.
+        JSONObject json = new JSONObject();
+
+        // Create JSON
+        for (String sheetName : sheetList) {
+            JSONArray rows = ExcelParser.parseSheet(workbook, sheetName);
+            json.put(sheetName, rows);
+        }
+
+        return  json;
+    }
+
+    /**
+     * Construct a json array using the sheet list from the workbook
+     * @param workbook
+     * @param sheetList
+     * @return
+     */
+    public static JSONArray constructJsonArray(Workbook workbook, String[] sheetList) {
+        JSONArray json = new JSONArray();
+
+        // Create JSON
+        for (String sheetName : sheetList) {
+            JSONArray rows = ExcelParser.parseSheet(workbook, sheetName);
+            for (int i=0; i < rows.length(); i++) {
+                json.put(rows.get(i));
+            }
+        }
+
+        return json;
+    }
+
+    /**
+     * Save a string as a json file
+     * @param targetName
+     * @param jsonText
+     * @throws IOException
+     */
+    public static void saveStringToFile(String targetName, String jsonText) throws IOException {
+        // Write into file
+        Path path = Paths.get(targetName + ".json");
+        BufferedWriter writer = Files.newBufferedWriter( path );
+        writer.write(jsonText);
+        writer.close();
+    }
+
+    /**
      * Parse the excel file and save as json
      * @param targetName Excel file name without suffix
      * @param sheetList Target sheet list
      * @param showSheetName Whether show sheet name in result or not
      */
-    public static void parseExcel(String targetName, String[] sheetList, boolean showSheetName) {
-        File excelFile = new File(targetName + ".xlsx");
+    public static void parseExcelFile(String targetName, String[] sheetList, boolean showSheetName) {
+
 
         try {
-            FileInputStream inp = new FileInputStream( excelFile );
-            Workbook workbook = WorkbookFactory.create( inp );
+            Workbook workbook = getWorkbook(targetName);
 
             String jsonText;
 
             if (showSheetName) {
-                // Start constructing JSON.
-                JSONObject json = new JSONObject();
-
-                // Create JSON
-                for (String sheetName : sheetList) {
-                    JSONArray rows = ExcelParser.parseSheet(workbook, sheetName);
-                    json.put(sheetName, rows);
-                }
-
                 // Get the JSON text.
+                JSONObject json = constructJsonObject(workbook, sheetList);
                 jsonText = json.toString();
             } else {
-                JSONArray json = new JSONArray();
-
-                // Create JSON
-                for (String sheetName : sheetList) {
-                    JSONArray rows = ExcelParser.parseSheet(workbook, sheetName);
-                    for (int i=0; i < rows.length(); i++) {
-                        json.put(rows.get(i));
-                    }
-                }
-
                 // Get the JSON text.
+                JSONArray json = constructJsonArray(workbook, sheetList);
                 jsonText = json.toString();
             }
 
-            // Write into file
-            Path path = Paths.get(targetName + ".json");
-            BufferedWriter writer = Files.newBufferedWriter( path );
-            writer.write(jsonText);
-            writer.close();
+            saveStringToFile(targetName, jsonText);
         } catch (InvalidFormatException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -120,7 +165,7 @@ public class ExcelParserMain {
             // Detect show sheet name option
             boolean showSheetName = (args.length == 3) ? Boolean.parseBoolean(args[2]) : false;
 
-            parseExcel(targetName, sheetList, showSheetName);
+            parseExcelFile(targetName, sheetList, showSheetName);
         }
     }
 
