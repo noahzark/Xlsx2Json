@@ -17,6 +17,17 @@ import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK;
  */
 public class ExcelParser {
 
+    public static String SIGN_HIDDEN_CELL_PREFIX = "$";
+
+    public static String SIGN_ITEM_SPLITTER = ",";
+
+    public static String SIGN_KEYVALUE_SPLITTER = ":";
+
+    public static String SIGN_TABLE_REFERENCE_SPLITTER = "@";
+
+    public static String SIGN_SHEETNAME_COLUMNNAME_SPLITTER = "#";
+
+
     /**
      * Parse the whole sheet of a workbook
      * @param workbook
@@ -108,6 +119,10 @@ public class ExcelParser {
             Cell cell = row.getCell(index);
 
             String key = parsedSheet.getKey( index );
+
+            if (key.startsWith(SIGN_HIDDEN_CELL_PREFIX))
+                continue;
+
             ParsedCellType type = parsedSheet.getType( index );
 
             // Null cell handler
@@ -184,12 +199,12 @@ public class ExcelParser {
 
                 case REFERENCE:
                     // Split key to get real key, target sheet name and target column name
-                    // Key example: monster@monsterSheet.monsterId
-                    String[] keyAndTarget = key.split("@");
+                    // Key example: monster@monsterSheet#monsterId
+                    String[] keyAndTarget = key.split(SIGN_TABLE_REFERENCE_SPLITTER);
                     key = keyAndTarget[0];
 
                     // Split sheet name and column name
-                    String[] realTarget = keyAndTarget[1].split("#");
+                    String[] realTarget = keyAndTarget[1].split(SIGN_SHEETNAME_COLUMNNAME_SPLITTER);
                     String targetSheetName = realTarget[0];
                     String targetKey = realTarget[1];
                     String targetValue = getCellStringValue(cell);
@@ -241,7 +256,7 @@ public class ExcelParser {
     public static <W> W parseCellData(ParsedCellType type, String cellValue) throws NumberFormatException {
         Object object = null;
 
-        String[] items = cellValue.split(",");
+        String[] items = cellValue.split(SIGN_ITEM_SPLITTER);
 
         switch (type) {
             case ARRAY_STRING:
@@ -277,7 +292,7 @@ public class ExcelParser {
                 for (String item : items) {
                     String temp = item.trim();
 
-                    String[] keyValue = item.split(":");
+                    String[] keyValue = item.split(SIGN_KEYVALUE_SPLITTER);
                     String key = keyValue[0], value = keyValue[1];
                     key = key.trim();
                     value = value.trim();
