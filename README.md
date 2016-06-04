@@ -42,6 +42,8 @@ The second row should be column name definition
 
 The following rows should be datas
 
+> **Especially**, the first column should be **Basic** type so the parser could index it as the primary key
+
 ## Example (Excel .xlsx file)
 #### Monsters sheet
 | Integer | String | Basic  | Array\<Double\> | Array\<String\>   | Reference   | Object      |
@@ -113,7 +115,7 @@ Result:
 
 You can use "Basic" to let the parser automatically detect types
 
-> Especially if all columns are basic types, you can omit the type definition row
+> **Especially** if all columns are **Basic** types, you can omit the type definition row
 
 #### Array Types
 * Array\<String\>
@@ -154,4 +156,4 @@ If a column is blank, will automatically generate a null value in the JSON file.
 
 If a column's name starts with **$** sign, then it won't appear in the result json
 
-> Especially, if you want to reference to a hidden column, you should also include the **$** sign in reference column name
+> **Especially**, if you want to **reference** to a hidden column, you should also include the **$** sign in reference column name
