@@ -5,7 +5,7 @@ Supported platforms: Anywhere you can run a Java program
 
 ## Quick start
 1. Download release or use Gradle to make a build 
-2. Run the command line
+2. Run the command line (See [Usage](#usage) section)
 3. The json file will be generated with the same filename
 
 ## Usage
@@ -24,6 +24,7 @@ Example
 
 e.g.
 > ture = {"sheet1":{...},"sheet2":{...}
+
 > false = [{...},{...}]
 
 ## Gradle build command
@@ -32,6 +33,14 @@ e.g.
 > $ gradle fatJar
 
 The Jar is created under the ```$project/build/libs/``` folder.
+
+## Input file format
+
+The first row should be column type definition (See [Supported types](#supported-types) section)
+
+The second row should be column name definition
+
+The following rows should be datas
 
 ## Example (Excel .xlsx file)
 #### Monsters sheet
