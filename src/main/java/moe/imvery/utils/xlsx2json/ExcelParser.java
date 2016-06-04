@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK;
+import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING;
 
 /**
  * Created by Feliciano on 6/1/2016.
@@ -128,6 +129,13 @@ public class ExcelParser {
             // Null cell handler
             switch (type) {
                 case BASIC:
+                    // Handle "Null" string
+                    if (cell != null && cell.getCellType() == CELL_TYPE_STRING) {
+                        if (cell.getStringCellValue().equalsIgnoreCase("null")) {
+                            jsonRow.put( key, JSONObject.NULL);
+                            continue;
+                        }
+                    }
                 case OBJECT:
                     if (cell == null || cell.getCellType() == CELL_TYPE_BLANK) {
                         jsonRow.put( key, JSONObject.NULL);
