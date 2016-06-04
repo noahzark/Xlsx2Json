@@ -42,7 +42,7 @@ The Jar is created under the ```$project/build/libs/``` folder.
 #### Shield sheet
 | Integer | String | Boolean  | Basic |
 | ----   | --------| ------ | ------ | 
-| $id     | name  | foSsale   | price  |
+| $id     | name  | forSale   | price  |
 | 123    | COPPER SHIELD  | TRUE   | 3600 |
 
 Result:
