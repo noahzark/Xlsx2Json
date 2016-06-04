@@ -19,7 +19,7 @@ Example
 #### Arguments
 
 * The first argument is the Excel filename
-* The second argument it the sheet you want to export to json
+* The second argument is the sheet you want to export to json
 * The third argument indicates whether show the sheet names in generated json or not, will be set to false if omitted
 
 e.g.
@@ -40,7 +40,7 @@ The first row should be column type definition (See [Supported types](#supported
 
 The second row should be column name definition
 
-The following rows should be datas
+The following rows should be data
 
 > **Especially**, the first column should be **Basic** type so the parser could index it as the primary key
 
@@ -129,7 +129,7 @@ The values should be divided using commas ","
 #### Object type
 * Object
 
-Use this one to directly construct a JSON object using basic types, childs should be divided using commas ","
+Use this one to directly construct a JSON object using basic types, child should be divided using commas ","
 
 > For more complicated objects, see Reference type
 
