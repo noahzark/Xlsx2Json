@@ -32,11 +32,18 @@ Example
 The Jar is created under the ```$project/build/libs/``` folder.
 
 ## Example (Excel .xlsx file)
+#### Monster sheet
 | Integer | String | Basic  | Array\<Double\> | Array\<String\>   | Reference   | Object      |
 | ----   | --------| ------ | ---------------- | ---------- | ---------- | ------------ |
-| id     | weapon  | flag   | nums  | words  | shiled@shieldStuffs#_id   | objects      |
-| 123    | shield  | TRUE   | 1,2   | hello,world   | COPPER_SHIELD | a:123,b:"45",c:false   |
-|      | sword   | FALSE  |   | oh god    |   | a:11;b:"22",c:true    |
+| id     | weapon  | $flag   | nums  | words  | shiled@shield#$id   | objects      |
+| 123    | shield  | TRUE   | 1,2   | hello,world   | 123 | a:123,b:"45",c:false   |
+|        | sword   | FALSE  | null  | oh god       |   | a:11;b:"22",c:true    |
+
+#### Shield sheet
+| Integer | String | Boolean  | Basic |
+| ----   | --------| ------ | ------ | 
+| $id     | name  | foSsale   | price  |
+| 123    | COPPER SHIELD  | TRUE   | 3600 |
 
 Result:
 
@@ -45,7 +52,6 @@ Result:
    "example":[
       {
          "weapon":"shiled",
-         "flag":true,
          "objects":{
             "a":123,
             "b":"45",
@@ -63,18 +69,11 @@ Result:
          "shiled":{
             "forSale":true,
             "price":3600,
-            "durability":20,
             "name":"COPPER SHIELD",
-            "priceType":"GOLD",
-            "description":"desc",
-            "_id":"COPPER_SHIELD",
-            "pic":"coppershield.png",
-            "life":100
          }
       },
       {
          "weapon":"sword",
-         "flag":false,
          "objects":{
             "a":11,
             "b":"22",
@@ -130,7 +129,18 @@ Use this type to insert a JSON object from another sheet, the format should be
 
 and the value should be the column value of target.
 
+Use **@** to split column name and sheet name, use **#** to split target sheet name and target column name
+
 #### Null values
+
+* Null
 
 If a column is blank, will automatically generate a null value in the JSON file.
 
+#### Hidden columns
+
+* $column_name
+
+If a column's name starts with **$** sign, then it won't appear in the result json
+
+> Especially, if you want to reference to a hidden column, you should also include the **$** sign in reference column name
