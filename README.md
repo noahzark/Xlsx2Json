@@ -51,12 +51,16 @@ The following rows should be data
 | id     | weapon  | $flag   | nums  | words  | shiled@shield#$id   | objects      |
 | 123    | shield  | TRUE   | 1,2   | hello,world   | 123 | a:123,b:"45",c:false   |
 |        | sword   | FALSE  | null  | oh god       |   | a:11;b:"22",c:true    |
+![monsters sheet](https://raw.githubusercontent.com/noahzark/Xlsx2Json/master/example/monsters.png)
 
 #### Shields sheet
-| Integer | String | Boolean  | Basic |
-| ----   | --------| ------ | ------ | 
+> The type definition line is omitted because all columns are basic types
+
 | $id     | name  | forSale   | price  |
+| ----   | --------| ------ | ------ | 
 | 123    | COPPER SHIELD  | TRUE   | 3600 |
+
+![shields sheet](https://raw.githubusercontent.com/noahzark/Xlsx2Json/master/example/shields.png)
 
 Result:
 
