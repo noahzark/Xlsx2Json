@@ -1,4 +1,6 @@
 # Xlsx2Json
+[![Build Status](http://jenkins.imvery.moe/job/Xlsx2Json/badge/icon)](http://jenkins.imvery.moe/job/Xlsx2Json/)
+
 A Java parser to convert xlsx sheets to JSON
 
 Supported platforms: Anywhere you can run a Java program
