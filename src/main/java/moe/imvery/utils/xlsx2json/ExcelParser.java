@@ -166,6 +166,28 @@ public class ExcelParser {
             JSONArray jsonArray;
             JSONObject jsonObject;
 
+            String stringCellValue = "";
+
+            switch (type) { // Add single value support for the row
+                case ARRAY_STRING:
+                case ARRAY_BOOLEAN:
+                case ARRAY_DOUBLE:
+                {
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_BOOLEAN:
+                            stringCellValue = String.valueOf(cell.getBooleanCellValue());
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            stringCellValue = String.valueOf(cell.getNumericCellValue());
+                            break;
+                        default:
+                            stringCellValue = cell.getStringCellValue();
+                    }
+                }
+
+                default:
+            }
+
             switch (type) {
                 case BASIC:
                     switch (cell.getCellType())
@@ -183,19 +205,19 @@ public class ExcelParser {
                     break;
 
                 case ARRAY_STRING:
-                    result = ExcelParser.<ArrayList<String>>parseCellData(type, cell.getStringCellValue());
+                    result = ExcelParser.<ArrayList<String>>parseCellData(type, stringCellValue );
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
 
                 case ARRAY_BOOLEAN:
-                    result = ExcelParser.<ArrayList<Boolean>>parseCellData(type, cell.getStringCellValue());
+                    result = ExcelParser.<ArrayList<Boolean>>parseCellData(type, stringCellValue );
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
 
                 case ARRAY_DOUBLE:
-                    result = ExcelParser.<ArrayList<Double>>parseCellData(type, cell.getStringCellValue());
+                    result = ExcelParser.<ArrayList<Double>>parseCellData(type, stringCellValue );
                     jsonArray = new JSONArray(result);
                     jsonRow.put( key, jsonArray );
                     break;
