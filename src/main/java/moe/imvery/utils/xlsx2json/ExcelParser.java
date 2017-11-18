@@ -7,7 +7,10 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 
 import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK;
@@ -117,6 +120,8 @@ public class ExcelParser {
         //Parse each cell
         for ( int index = 0; index < parsedSheet.width;  index++)
         {
+            //System.out.println("Column: " + index);
+
             Cell cell = row.getCell(index);
 
             String key = parsedSheet.getKey( index );
@@ -132,19 +137,26 @@ public class ExcelParser {
                     // Handle "Null" string
                     if (cell != null && cell.getCellType() == CELL_TYPE_STRING) {
                         if (cell.getStringCellValue().equalsIgnoreCase("null")) {
-                            jsonRow.put( key, JSONObject.NULL);
+                            jsonRow.put(key, JSONObject.NULL);
+                            continue;
+                        }
+                    }
+                case TIME:
+                    if (cell != null && cell.getCellType() == CELL_TYPE_STRING) {
+                        if (cell.getStringCellValue().equalsIgnoreCase("null")) {
+                            jsonRow.put(key, JSONObject.NULL);
                             continue;
                         }
                     }
                 case OBJECT:
                     if (cell == null || cell.getCellType() == CELL_TYPE_BLANK) {
-                        jsonRow.put( key, JSONObject.NULL);
+                        jsonRow.put(key, JSONObject.NULL);
                         continue;
                     }
                     break;
                 case REFERENCE:
                     if (cell == null || cell.getCellType() == CELL_TYPE_BLANK) {
-                        jsonRow.put( key.substring(0, key.indexOf("@")), JSONObject.NULL);
+                        jsonRow.put(key.substring(0, key.indexOf("@")), JSONObject.NULL);
                         continue;
                     }
                     break;
@@ -153,7 +165,7 @@ public class ExcelParser {
                 case ARRAY_BOOLEAN:
                 case ARRAY_DOUBLE:
                     if (cell == null || cell.getCellType() == CELL_TYPE_BLANK) {
-                        jsonRow.put( key, new ArrayList() );
+                        jsonRow.put(key, new ArrayList());
                         continue;
                     }
                     break;
@@ -180,6 +192,23 @@ public class ExcelParser {
                             jsonRow.put( key, cell.getStringCellValue() );
                             break;
                     };
+                    break;
+
+                case TIME:
+                    if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                        Date time = cell.getDateCellValue();
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(time);
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                        String timeStr = sdf.format(calendar.getTime());
+                        jsonRow.put( key, timeStr );
+                    } else if (cell.getCellType() == Cell.CELL_TYPE_STRING){
+                        jsonRow.put( key, cell.getStringCellValue() );
+                    } else {
+                        throw new IllegalArgumentException("Unhandled cell of " + cell.getCellType()+ " type at "
+                                + "row " + row.getRowNum()
+                                + "column " + index);
+                    }
                     break;
 
                 case ARRAY_STRING:

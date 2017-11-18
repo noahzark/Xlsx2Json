@@ -1,10 +1,12 @@
 # Xlsx2Json
+
 A Java parser to convert xlsx sheets to JSON
 
 Supported platforms: Anywhere you can run a Java program
 
 ## Quick start
-1. Download release or use Gradle to make a build 
+
+1. Download release or use Gradle to make a build
 2. Run the command line (See [Usage](#usage) section)
 3. The json file will be generated with the same filename
 
@@ -16,7 +18,7 @@ Example
 
 > java -jar xlsx2json-1.2.jar test.xlsx "monsters maps weapons" true
 
-#### Arguments
+### Arguments
 
 * The first argument is the Excel filename
 * The second argument is the sheet you want to export to json
@@ -24,10 +26,10 @@ Example
 
 e.g.
 > ture = {"sheet1":{...},"sheet2":{...}
-
 > false = [{...},{...}]
 
 ## Gradle build command
+
 > $ gradle clean
 
 > $ gradle fatJar
@@ -45,7 +47,9 @@ The following rows should be data
 > **Especially**, the first column should be **Basic** type so the parser could index it as the primary key
 
 ## Example (Excel .xlsx file)
+
 #### Monsters sheet
+
 | Integer | String | Basic  | Array\<Double\> | Array\<String\>   | Reference   | Object      |
 | ----   | --------| ------ | ---------------- | ---------- | ---------- | ------------ |
 | id     | weapon  | $flag   | nums  | words  | shiled@shield#$id   | objects      |
@@ -54,6 +58,7 @@ The following rows should be data
 ![monsters sheet](https://raw.githubusercontent.com/noahzark/Xlsx2Json/master/example/monsters.png)
 
 #### Shields sheet
+
 > The type definition line is omitted because all columns are basic types
 
 | $id     | name  | forSale   | price  |
@@ -110,7 +115,9 @@ Result:
 ```
 
 ## Supported types
-#### Basic Types
+
+### Basic Types
+
 * String
 * Integer
 * Float
@@ -121,7 +128,14 @@ You can use "Basic" to let the parser automatically detect types
 
 > **Especially** if all columns are **Basic** types, you can omit the type definition row
 
-#### Array Types
+### Time Type
+
+Support all strings with format **HH:mm:ss** (directly out) or cell format **Time** (converted to a calander object and format with simple date format)
+
+> **Date** and **DateTIme** support would be added in future versions, add an issue if you need it.
+
+### Array Types
+
 * Array\<String\>
 * Array\<Boolean\>
 * Array\<Double\>
@@ -130,31 +144,33 @@ The values should be divided using commas ","
 
 > You can use the Array\<Double\> to represent all numeric types like Integer/Float and so on
 
-#### Object type
+### Object type
+
 * Object
 
 Use this one to directly construct a JSON object using basic types, child should be divided using commas ","
 
 > For more complicated objects, see Reference type
 
-#### Reference type
+### Reference type
+
 * Reference
 
 Use this type to insert a JSON object from another sheet, the format should be
 
-``` name_of_this_column@sheet_name#column_name ```
+```name_of_this_column@sheet_name#column_name```
 
 and the value should be the column value of target.
 
 Use **@** to split column name and sheet name, use **#** to split target sheet name and target column name
 
-#### Null values
+### Null values
 
 * Null
 
 If a column is blank, will automatically generate a null value in the JSON file.
 
-#### Hidden columns
+### Hidden columns
 
 * $column_name
 

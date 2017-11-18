@@ -13,6 +13,10 @@ public enum ParsedCellType {
      */
     BASIC("Basic"),
     /**
+     * Time type format: hh:mm:ss
+     */
+    TIME("Time"),
+    /**
      * String array
      */
     ARRAY_STRING("Array<String>"),
