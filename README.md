@@ -1,5 +1,7 @@
 # Xlsx2Json
 
+[![Build Status](http://jenkins.centaurstech.com/job/Xlsx2Json/badge/icon)](http://jenkins.centaurstech.com/job/Xlsx2Json/)
+
 A Java parser to convert xlsx sheets to JSON
 
 Supported platforms: Anywhere you can run a Java program
@@ -48,7 +50,7 @@ The following rows should be data
 
 ## Example (Excel .xlsx file)
 
-#### Monsters sheet
+### Monsters sheet
 
 | Integer | String | Basic  | Array\<Double\> | Array\<String\>   | Reference   | Object      |
 | ----   | --------| ------ | ---------------- | ---------- | ---------- | ------------ |
@@ -57,7 +59,7 @@ The following rows should be data
 |        | sword   | FALSE  | null  | oh god       |   | a:11;b:"22",c:true    |
 ![monsters sheet](https://raw.githubusercontent.com/noahzark/Xlsx2Json/master/example/monsters.png)
 
-#### Shields sheet
+### Shields sheet
 
 > The type definition line is omitted because all columns are basic types
 
