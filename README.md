@@ -1,6 +1,6 @@
 # Xlsx2Json
 
-[![Build Status](http://jenkins.centaurstech.com/job/Xlsx2Json/badge/icon)](http://jenkins.centaurstech.com/job/Xlsx2Json/)
+[![Build Status](http://jenkins.chewrobot.com/job/Xlsx2Json/badge/icon)](http://jenkins.chewrobot.com/job/Xlsx2Json/)
 
 A Java parser to convert xlsx sheets to JSON
 
