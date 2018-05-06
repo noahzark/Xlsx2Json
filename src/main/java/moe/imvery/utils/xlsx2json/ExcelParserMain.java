@@ -3,10 +3,7 @@ package moe.imvery.utils.xlsx2json;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONParser;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -111,32 +108,6 @@ public class ExcelParserMain {
             saveStringToFile(targetName, jsonText);
         } catch (InvalidFormatException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Validate two json file.  If it isn't it throws an {@link AssertionError}.
-     * @param expectedFileName Expected JSON file
-     * @param targetFileName File to compare
-     * @param strict Enables strict checking
-     * @throws JSONException
-     */
-    public static void validateJson(String expectedFileName, String targetFileName, boolean strict) {
-        try {
-            System.out.println("Checking " + targetFileName + " ... ");
-            Path path = Paths.get(targetFileName);
-            BufferedReader reader = Files.newBufferedReader(path);
-            String jsonText = reader.readLine();
-
-            path = Paths.get(expectedFileName);
-            reader = Files.newBufferedReader(path);
-            String expected = reader.readLine();
-
-            JSONAssert.assertEquals(expected, jsonText, false);
-
-            System.out.println("Passed.");
         } catch (IOException e) {
             e.printStackTrace();
         }
