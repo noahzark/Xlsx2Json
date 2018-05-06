@@ -177,10 +177,6 @@ public class ExcelParser {
                     throw new IllegalArgumentException("Unhandled empty cell of " + type + " type.");
             }
 
-            ArrayList result;
-            JSONArray jsonArray;
-            JSONObject jsonObject;
-
             String stringCellValue = "";
 
             switch (type) { // Add single value support for the row
@@ -237,25 +233,22 @@ public class ExcelParser {
                     break;
 
                 case ARRAY_STRING:
-                    result = ExcelParser.<ArrayList<String>>parseCellData(type, stringCellValue );
-                    jsonArray = new JSONArray(result);
-                    jsonRow.put( key, jsonArray );
+                    ArrayList stringArray = ExcelParser.<ArrayList<String>>parseCellData(type, stringCellValue );
+                    jsonRow.put( key, new JSONArray(stringArray) );
                     break;
 
                 case ARRAY_BOOLEAN:
-                    result = ExcelParser.<ArrayList<Boolean>>parseCellData(type, stringCellValue );
-                    jsonArray = new JSONArray(result);
-                    jsonRow.put( key, jsonArray );
+                    ArrayList booleanArray = ExcelParser.<ArrayList<Boolean>>parseCellData(type, stringCellValue );
+                    jsonRow.put( key, new JSONArray(booleanArray) );
                     break;
 
                 case ARRAY_DOUBLE:
-                    result = ExcelParser.<ArrayList<Double>>parseCellData(type, stringCellValue );
-                    jsonArray = new JSONArray(result);
-                    jsonRow.put( key, jsonArray );
+                    ArrayList doubleArray = ExcelParser.<ArrayList<Double>>parseCellData(type, stringCellValue );
+                    jsonRow.put( key, new JSONArray(doubleArray) );
                     break;
 
                 case OBJECT:
-                    jsonObject = ExcelParser.<JSONObject>parseCellData(type, cell.getStringCellValue());
+                    JSONObject jsonObject = ExcelParser.parseCellData(type, cell.getStringCellValue());
                     jsonRow.put( key, jsonObject );
                     break;
 
