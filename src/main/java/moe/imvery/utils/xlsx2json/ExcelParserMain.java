@@ -6,11 +6,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONParser;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
 /**
  * Created by Feliciano on 6/1/2016.
@@ -91,8 +93,6 @@ public class ExcelParserMain {
      * @param showSheetName Whether show sheet name in result or not
      */
     public static void parseExcelFile(String targetName, String[] sheetList, boolean showSheetName) {
-
-
         try {
             Workbook workbook = getWorkbook(targetName);
 
@@ -142,28 +142,46 @@ public class ExcelParserMain {
         }
     }
 
-    public static void main(String[] args) {
-        if (args.length < 2)
+    public static void main(String[] args) throws Exception{
+        String[] configs = args;
+        if (args.length == 1) {
+            if (args[0].contains("-config=")) {
+                String configFile = args[0].replace("-config=", "");
+                String content = new Scanner(new File(configFile)).useDelimiter("\\Z").next();
+                JSONObject config = new JSONObject(content);
+
+                configs = new String[]{
+                        config.getString("target"),
+                        config.getString("sheet"),
+                        config.getString("show")
+                };
+            } else {
+                throw new IllegalArgumentException("Expected the config filename in the first arguments, please use -config=xxx.json");
+            }
+        }
+
+        if (configs.length < 2)
             throw new IllegalArgumentException("Expected at least 2 arguments representing Filename, Sheetnames(Divided by space, surrounded by \").");
 
-        if (args.length > 3)
+        if (configs.length > 3)
             throw new IllegalArgumentException("Expected at most 3 arguments representing Filename, Sheetnames(Divided by space, surrounded by \") and a boolean for show sheet names in result or not.");
 
-        String targetName = args[0];
+        String targetName = configs[0];
 
         if (targetName.equalsIgnoreCase("Validate")) {
 
         } else {
             if (!targetName.endsWith("xlsx"))
-                throw new IllegalArgumentException("The first argument should be a excel(xlsx) file name.");
+                throw new IllegalArgumentException("The first argument should be an excel(xlsx) file name.");
+
             // Cut the .xlsx suffix
             targetName = targetName.substring(0, targetName.length()-5);
 
             // Split sheet names
-            String[] sheetList = args[1].split(" ");
+            String[] sheetList = configs[1].split(" ");
 
             // Detect show sheet name option
-            boolean showSheetName = (args.length == 3) ? Boolean.parseBoolean(args[2]) : false;
+            boolean showSheetName = (configs.length == 3) ? Boolean.parseBoolean(args[2]) : false;
 
             parseExcelFile(targetName, sheetList, showSheetName);
         }
