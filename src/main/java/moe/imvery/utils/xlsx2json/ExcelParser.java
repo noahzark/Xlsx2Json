@@ -43,8 +43,6 @@ public class ExcelParser {
         JSONArray rows = new JSONArray();
 
         // Get the Sheet by name.
-
-
         ParsedSheet parsedSheet = new ParsedSheet(workbook, configName);
         parsedSheet.parseSheet();
 
@@ -126,6 +124,11 @@ public class ExcelParser {
 
             String key = parsedSheet.getKey( index );
 
+            // Skip cells with empty key
+            if (key.isEmpty())
+                continue;
+
+            // Skip hidden cells
             if (key.startsWith(SIGN_HIDDEN_CELL_PREFIX))
                 continue;
 
