@@ -1,20 +1,16 @@
 package moe.imvery.utils.xlsx2json;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-
-import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK;
-import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING;
 
 /**
  * Created by Feliciano on 6/1/2016.
@@ -88,7 +84,7 @@ public class ExcelParser {
                     if (cell == null)
                         continue;
 
-                    if (cell.getCellType() == CELL_TYPE_BLANK)
+                    if (cell.getCellType() == CellType.BLANK)
                         continue;
 
                     String cellValue = getCellStringValue(cell);
@@ -138,27 +134,28 @@ public class ExcelParser {
             switch (type) {
                 case BASIC:
                     // Handle "Null" string
-                    if (cell != null && cell.getCellType() == CELL_TYPE_STRING) {
+                    if (cell != null && cell.getCellType() == CellType.STRING) {
                         if (cell.getStringCellValue().equalsIgnoreCase("null")) {
                             jsonRow.put(key, JSONObject.NULL);
                             continue;
                         }
                     }
+                case DATE:
                 case TIME:
-                    if (cell != null && cell.getCellType() == CELL_TYPE_STRING) {
+                    if (cell != null && cell.getCellType() == CellType.STRING) {
                         if (cell.getStringCellValue().equalsIgnoreCase("null")) {
                             jsonRow.put(key, JSONObject.NULL);
                             continue;
                         }
                     }
                 case OBJECT:
-                    if (cell == null || cell.getCellType() == CELL_TYPE_BLANK) {
+                    if (cell == null || cell.getCellType() == CellType.BLANK) {
                         jsonRow.put(key, JSONObject.NULL);
                         continue;
                     }
                     break;
                 case REFERENCE:
-                    if (cell == null || cell.getCellType() == CELL_TYPE_BLANK) {
+                    if (cell == null || cell.getCellType() == CellType.BLANK) {
                         jsonRow.put(key.substring(0, key.indexOf("@")), JSONObject.NULL);
                         continue;
                     }
@@ -167,7 +164,7 @@ public class ExcelParser {
                 case ARRAY_STRING:
                 case ARRAY_BOOLEAN:
                 case ARRAY_DOUBLE:
-                    if (cell == null || cell.getCellType() == CELL_TYPE_BLANK) {
+                    if (cell == null || cell.getCellType() == CellType.BLANK) {
                         jsonRow.put(key, new ArrayList());
                         continue;
                     }
@@ -185,10 +182,10 @@ public class ExcelParser {
                 case ARRAY_DOUBLE:
                 {
                     switch (cell.getCellType()) {
-                        case Cell.CELL_TYPE_BOOLEAN:
+                        case BOOLEAN:
                             stringCellValue = String.valueOf(cell.getBooleanCellValue());
                             break;
-                        case Cell.CELL_TYPE_NUMERIC:
+                        case NUMERIC:
                             stringCellValue = String.valueOf(cell.getNumericCellValue());
                             break;
                         default:
@@ -203,10 +200,10 @@ public class ExcelParser {
                 case BASIC:
                     switch (cell.getCellType())
                     {
-                        case Cell.CELL_TYPE_NUMERIC:
+                        case NUMERIC:
                             jsonRow.put( key, cell.getNumericCellValue() );
                             break;
-                        case Cell.CELL_TYPE_BOOLEAN:
+                        case BOOLEAN:
                             jsonRow.put( key, cell.getBooleanCellValue() );
                             break;
                         default:
@@ -215,15 +212,44 @@ public class ExcelParser {
                     };
                     break;
 
+                case DATE:
+                    if(cell.getCellType() == CellType.NUMERIC){
+                        BigDecimal data = new BigDecimal(cell.getNumericCellValue()+"");
+                        String dateStr = data+"";
+                        Date date = null;
+                        if ((date=isValidDate(dateStr)) !=null){
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            dateStr = sdf.format(date);
+                            jsonRow.put(key, dateStr);
+                        } else{
+                            jsonRow.put(key, "1990-01-01");
+                        }
+                    } else if(cell.getCellType() == CellType.STRING){
+                        String dateStr = cell.getStringCellValue();
+                        Date date = null;
+                        if ((date=isValidDate(dateStr)) !=null){
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            dateStr = sdf.format(date);
+                            jsonRow.put(key, dateStr);
+                        } else{
+                            jsonRow.put(key, "1990-01-01");
+                        }
+                    } else {
+                        throw new IllegalArgumentException("Unhandled cell of " + cell.getCellType()+ " type at "
+                                + "row " + row.getRowNum()
+                                + "column " + index);
+                    }
+                    break;
+
                 case TIME:
-                    if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                    if (cell.getCellType() == CellType.NUMERIC) {
                         Date time = cell.getDateCellValue();
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(time);
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
                         String timeStr = sdf.format(calendar.getTime());
                         jsonRow.put( key, timeStr );
-                    } else if (cell.getCellType() == Cell.CELL_TYPE_STRING){
+                    } else if (cell.getCellType() == CellType.STRING){
                         jsonRow.put( key, cell.getStringCellValue() );
                     } else {
                         throw new IllegalArgumentException("Unhandled cell of " + cell.getCellType()+ " type at "
@@ -284,13 +310,13 @@ public class ExcelParser {
 
     private static String getCellStringValue(Cell cell) {
         switch (cell.getCellType()) {
-            case CELL_TYPE_BLANK:
+            case BLANK:
                 break;
 
-            case Cell.CELL_TYPE_NUMERIC:
+            case NUMERIC:
                 return cell.getNumericCellValue() + "";
 
-            case Cell.CELL_TYPE_BOOLEAN:
+            case BOOLEAN:
                 return cell.getBooleanCellValue() + "";
 
             default:
@@ -298,6 +324,18 @@ public class ExcelParser {
         }
 
         return null;
+    }
+
+    private static Date isValidDate(String dateStr){
+        Date date = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        try{
+            format.setLenient(false);
+            date = format.parse(dateStr);
+        }catch (ParseException e){
+            return null;
+        }
+        return date;
     }
 
     /**
