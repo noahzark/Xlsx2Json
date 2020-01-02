@@ -134,7 +134,10 @@ You can use "Basic" to let the parser automatically detect types
 
 Support all strings with format **HH:mm:ss** (directly out) or cell format **Time** (converted to a calander object and format with simple date format)
 
-> **Date** and **DateTIme** support would be added in future versions, add an issue if you need it.
+### Date Type
+Support string or numeric with format **yyyyMMdd** and it will format as **yyyy-MM-dd** in the json.
+
+> **DateTIme** support would be added in future versions, add an issue if you need it.
 
 ### Array Types
 

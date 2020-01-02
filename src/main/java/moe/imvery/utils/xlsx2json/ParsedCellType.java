@@ -17,6 +17,10 @@ public enum ParsedCellType {
      */
     TIME("Time"),
     /**
+     * Date type format: yyyyMMdd
+     */
+    DATE("Date"),
+    /**
      * String array
      */
     ARRAY_STRING("Array<String>"),
