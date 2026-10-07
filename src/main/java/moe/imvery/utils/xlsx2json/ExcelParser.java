@@ -4,8 +4,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -213,32 +212,29 @@ public class ExcelParser {
                     break;
 
                 case DATE:
-                    if(cell.getCellType() == CellType.NUMERIC){
-                        BigDecimal data = new BigDecimal(cell.getNumericCellValue()+"");
-                        String dateStr = data+"";
-                        Date date = null;
-                        if ((date=isValidDate(dateStr)) !=null){
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            dateStr = sdf.format(date);
-                            jsonRow.put(key, dateStr);
-                        } else{
-                            jsonRow.put(key, "1990-01-01");
-                        }
-                    } else if(cell.getCellType() == CellType.STRING){
-                        String dateStr = cell.getStringCellValue();
-                        Date date = null;
-                        if ((date=isValidDate(dateStr)) !=null){
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            dateStr = sdf.format(date);
-                            jsonRow.put(key, dateStr);
-                        } else{
-                            jsonRow.put(key, "1990-01-01");
-                        }
+                    Date date;
+                    if (cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell)) {
+                        // A real Excel date cell, stored as a serial day number
+                        date = cell.getDateCellValue();
+                    } else if (cell.getCellType() == CellType.NUMERIC) {
+                        // A plain number such as 20161010. Don't go through Double.toString(),
+                        // which turns it into scientific notation ("2.016101E7").
+                        double value = cell.getNumericCellValue();
+                        date = (value == Math.rint(value)) ? parseDate(String.valueOf((long) value)) : null;
+                    } else if (cell.getCellType() == CellType.STRING) {
+                        date = parseDate(cell.getStringCellValue().trim());
                     } else {
                         throw new IllegalArgumentException("Unhandled cell of " + cell.getCellType()+ " type at "
                                 + "row " + row.getRowNum()
                                 + "column " + index);
                     }
+
+                    if (date == null)
+                        throw new IllegalArgumentException("Invalid date \"" + getCellStringValue(cell) + "\" at "
+                                + "row " + row.getRowNum() + " column " + index
+                                + ", expected yyyyMMdd or an Excel date cell");
+
+                    jsonRow.put(key, new SimpleDateFormat("yyyy-MM-dd").format(date));
                     break;
 
                 case TIME:
@@ -326,15 +322,23 @@ public class ExcelParser {
         return null;
     }
 
-    private static Date isValidDate(String dateStr){
-        Date date = null;
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        try{
-            format.setLenient(false);
-            date = format.parse(dateStr);
-        }catch (ParseException e){
+    /**
+     * Parse a yyyyMMdd date string
+     * @return The date, or null if it isn't a valid yyyyMMdd date
+     */
+    private static Date parseDate(String dateStr){
+        if (dateStr.length() != 8)
             return null;
-        }
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        format.setLenient(false);
+
+        // parse() stops at the first character it can't use, so check the whole string was consumed
+        ParsePosition position = new ParsePosition(0);
+        Date date = format.parse(dateStr, position);
+        if (date == null || position.getIndex() != dateStr.length())
+            return null;
+
         return date;
     }
 

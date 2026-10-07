@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'moe.imvery.utils'
-version = '1.8'
+version = '1.9'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8

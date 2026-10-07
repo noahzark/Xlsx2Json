@@ -6,10 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Scanner;
 
 /**
  * Created by Feliciano on 6/1/2016.
@@ -118,13 +118,14 @@ public class ExcelParserMain {
         if (args.length == 1) {
             if (args[0].contains("-config=")) {
                 String configFile = args[0].replace("-config=", "");
-                String content = new Scanner(new File(configFile)).useDelimiter("\\Z").next();
+                String content = new String(Files.readAllBytes(Paths.get(configFile)), StandardCharsets.UTF_8);
                 JSONObject config = new JSONObject(content);
 
+                // "show" is optional, the same as the third command line argument
                 configs = new String[]{
                         config.getString("target"),
                         config.getString("sheet"),
-                        config.getString("show")
+                        String.valueOf(config.optBoolean("show", false))
                 };
             } else {
                 throw new IllegalArgumentException("Expected the config filename in the first arguments, please use -config=xxx.json");
@@ -152,7 +153,7 @@ public class ExcelParserMain {
             String[] sheetList = configs[1].split(" ");
 
             // Detect show sheet name option
-            boolean showSheetName = (configs.length == 3) ? Boolean.parseBoolean(args[2]) : false;
+            boolean showSheetName = (configs.length == 3) ? Boolean.parseBoolean(configs[2]) : false;
 
             parseExcelFile(targetName, sheetList, showSheetName);
         }
