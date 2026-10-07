@@ -27,8 +27,24 @@ Example
 * The third argument indicates whether show the sheet names in generated json or not, will be set to false if omitted
 
 e.g.
-> ture = {"sheet1":{...},"sheet2":{...}
+> true = {"sheet1":{...},"sheet2":{...}
 > false = [{...},{...}]
+
+### Config file
+
+You can also put the arguments in a JSON file:
+
+> java -jar xlsx2json-x.x.jar -config=config.json
+
+```json
+{
+  "target": "test.xlsx",
+  "sheet": "monsters maps weapons",
+  "show": true
+}
+```
+
+`show` is optional and defaults to false.
 
 ## Gradle build command
 
@@ -139,7 +155,9 @@ You can use "Basic" to let the parser automatically detect types
 Support all strings with format **HH:mm:ss** (directly out) or cell format **Time** (converted to a calander object and format with simple date format)
 
 ### Date Type
-Support string or numeric with format **yyyyMMdd** and it will format as **yyyy-MM-dd** in the json.
+Support string or numeric cells with format **yyyyMMdd**, and cells formatted as a **Date** in Excel. They are written as **yyyy-MM-dd** in the json.
+
+An invalid date stops the conversion with an error naming the row and column.
 
 > **DateTIme** support would be added in future versions, add an issue if you need it.
 
