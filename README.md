@@ -32,9 +32,13 @@ e.g.
 
 ## Gradle build command
 
-> $ gradle clean
+Requires Java 8 or newer. The Gradle wrapper downloads the right Gradle version for you.
 
-> $ gradle fatJar
+> $ ./gradlew clean fatJar
+
+Run the tests with
+
+> $ ./gradlew test
 
 The Jar is created under the ```$project/build/libs/``` folder.
 
