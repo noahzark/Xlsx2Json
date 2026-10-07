@@ -1,6 +1,6 @@
 # Xlsx2Json
 
-[![Build Status](http://jenkins.chewrobot.com/job/Xlsx2Json/badge/icon)](http://jenkins.chewrobot.com/job/Xlsx2Json/)
+[![CI](https://github.com/noahzark/Xlsx2Json/actions/workflows/ci.yml/badge.svg)](https://github.com/noahzark/Xlsx2Json/actions/workflows/ci.yml)
 
 A Java parser to convert xlsx sheets to JSON
 
@@ -40,7 +40,7 @@ Run the tests with
 
 > $ ./gradlew test
 
-The Jar is created under the ```$project/build/libs/``` folder.
+The runnable Jar is created as ```$project/build/libs/xlsx2json-<version>-all.jar```.
 
 ## Input file format
 
