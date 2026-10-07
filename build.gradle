@@ -1,37 +1,50 @@
-group 'moe.imvery.utils'
-version '1.8'
+plugins {
+    id 'java'
+}
 
-apply plugin: 'java'
+group = 'moe.imvery.utils'
+version = '1.8'
 
-sourceCompatibility = 1.7
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // http://mvnrepository.com/artifact/org.apache.poi/poi
-    compile group: 'org.apache.poi', name: 'poi', version: '4.1.0'
+    // https://mvnrepository.com/artifact/org.apache.poi/poi
+    implementation 'org.apache.poi:poi:5.5.1'
 
-    // http://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.0'
+    // https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+    implementation 'org.apache.poi:poi-ooxml:5.5.1'
 
-    // http://mvnrepository.com/artifact/org.json/json
-    compile group: 'org.json', name: 'json', version: '20160212'
+    // https://mvnrepository.com/artifact/org.json/json
+    implementation 'org.json:json:20260814'
 
-    // http://mvnrepository.com/artifact/org.skyscreamer/jsonassert
-    testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.2.3'
+    // POI 5 logs through the Log4j API; without a provider it prints an error on every run
+    runtimeOnly 'org.apache.logging.log4j:log4j-core:2.24.3'
 
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    // https://mvnrepository.com/artifact/org.skyscreamer/jsonassert
+    testImplementation('org.skyscreamer:jsonassert:1.5.3') {
+        // android-json ships its own org.json classes, which would shadow the real org.json
+        exclude group: 'com.vaadin.external.google', module: 'android-json'
+    }
+
+    testImplementation 'junit:junit:4.13.2'
 }
 
-task fatJar(type: Jar) {
+tasks.register('fatJar', Jar) {
     manifest {
         attributes 'Implementation-Title': 'Xlsx2Json',
-                'Implementation-Version': version,
+                'Implementation-Version': project.version,
                 'Main-Class': 'moe.imvery.utils.xlsx2json.ExcelParserMain'
     }
-    baseName = project.name
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    archiveBaseName = project.name
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
     with jar
 }
